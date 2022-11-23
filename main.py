@@ -23,12 +23,18 @@ while True:
                 player.ml = True
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = True
+            if event.key == K_w or event.key == K_UP:
+                player.mu = True
         if event.type == pygame.KEYUP:
             if event.key == K_a or event.key == K_LEFT:
                 player.ml = False
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = False
+            if event.key == K_w or event.key == K_UP:
+                player.mu = False
     player.movement()
+
+    player.collision()
     objects.draw()
     player.draw()
     pygame.display.update()

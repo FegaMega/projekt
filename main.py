@@ -33,8 +33,15 @@ while True:
             if event.key == K_w or event.key == K_UP:
                 player.mu = False
     player.movement()
-
-    player.collision()
+    while objects.i < objects.n:
+        playe = pygame.Rect(player.x, player.y, 50, 50)
+        objects.objekt[objects.i] = pygame.Rect(objects.x[objects.i], objects.y[objects.i], objects.sizex[objects.i], objects.y[objects.i])
+        if pygame.Rect.colliderect(playe, objects.objekt[objects.i]):
+            print('he')
+            if player.x + 50 <= objects.x[objects.i] + 10:
+                player.x = objects.x[objects.i] - player.xsize 
+        objects.i += 1
+    objects.i = 0
     objects.draw()
     player.draw()
     pygame.display.update()

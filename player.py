@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-screen = pygame.display.set_mode((800, 800), 0, 32)
+from main import screen
 
 class Player:
     def __init__(self):
@@ -11,12 +11,16 @@ class Player:
         self.yspeed = 0 
         self.ml = False
         self.mr = False
+    
     def draw(self):
+        playe = pygame.Rect(self.x, self.y, 50, 50)
+        pygame.draw.rect(screen, (0, 0, 0), playe)
+    def movement(self):
         if self.ml:
             self.x -= 3
         if self.mr:
             self.x += 3
         self.x = self.x + self.xspeed
         self.y = self.y + self.yspeed
-        playe = pygame.Rect(self.x, self.y, 50, 50)
-        pygame.draw.rect(screen, (0, 0, 0), playe)
+    def collision(pygame, self):
+        pygame.Rect.colliderect(self.player, object)

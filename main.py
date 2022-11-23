@@ -25,6 +25,5 @@ while True:
                 player.ml = False
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = False
-
     player.draw()
     pygame.display.update()

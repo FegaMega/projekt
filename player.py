@@ -33,12 +33,3 @@ class Player:
             self.yspeed = 9
         self.x = self.x + self.xspeed
         self.y = self.y + self.yspeed
-    def collision(self):
-        while objects.i < objects.n:
-            objects.objekt[objects.i] = pygame.Rect(objects.x[objects.i], objects.y[objects.i], objects.sizex[objects.i], objects.y[objects.i])
-            if pygame.Rect.colliderect(self.playe, objects.objekt[objects.i]):
-                print('he')
-                if self.x + 50 <= objects.x + 10:
-                    self.x = objects.x - self.xsize 
-            objects.i += 1
-        objects.i = 0

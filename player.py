@@ -1,12 +1,12 @@
 import pygame
 from pygame.locals import *
 
-from main import screen
+screen = pygame.display.set_mode((700, 700), 0, 32)
 
 class Player:
     def __init__(self):
         self.x = 0
-        self.y = 0
+        self.y = 650
         self.xspeed = 0
         self.yspeed = 0 
         self.ml = False

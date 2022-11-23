@@ -6,7 +6,7 @@ from player import Player
 import objects
 from objects import objekts
 
-screen = pygame.display.set_mode((800, 800), 0, 32)
+screen = pygame.display.set_mode((700, 700), 0, 32)
 
 objects = objekts()
 player = Player()
@@ -32,3 +32,4 @@ while True:
     objects.draw()
     player.draw()
     pygame.display.update()
+    pygame.time.Clock().tick(60)

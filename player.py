@@ -11,12 +11,11 @@ class Player:
         self.yspeed = 0 
         self.ml = False
         self.mr = False
-    def movement(self):
-        if self.ml:
-            self.xspeed = -3
-        if self.mr:
-            self.xpeed = 3
     def draw(self):
+        if self.ml:
+            self.x -= 3
+        if self.mr:
+            self.x += 3
         self.x = self.x + self.xspeed
         self.y = self.y + self.yspeed
         playe = pygame.Rect(self.x, self.y, 50, 50)

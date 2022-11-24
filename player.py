@@ -11,15 +11,17 @@ class Player:
     def __init__(self):
         self.x = 0
         self.y = 650
-        self.xsize = 0
-        self.ysize = 0
+        self.xsize = 50
+        self.ysize = 50
         self.xspeed = 0
         self.yspeed = 0 
-        self.ml = False
-        self.mr = False
-        self.mu = False
-        self.cj = False
-        self.playe = pygame.Rect(self.x, self.y, 50, 50)
+        self.ml: bool = False
+        self.mr: bool = False
+        self.mu: bool = False
+        self.cj: bool = False
+        self.xhitbox: bool = True
+        self.yhitbox: bool = True
+        self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
     
     def draw(self):
         playe = pygame.Rect(self.x, self.y, 50, 50)
@@ -27,9 +29,9 @@ class Player:
     def movement(self):
         if self.ml:
             self.x -= 3
-        if self.mr:
+        if self.mr == True:
             self.x += 3
-        if self.mu and self.cj:
-            self.yspeed = 9
-        self.x = self.x + self.xspeed
-        self.y = self.y + self.yspeed
+        if self.mu == True:
+            self.yspeed = -7
+        self.x += self.xspeed
+        self.y += self.yspeed

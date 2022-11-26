@@ -5,7 +5,9 @@ from objects import objekts
 
 objects = objekts()
 
-screen = pygame.display.set_mode((700, 700), 0, 32)
+sx = 700
+sy = 700
+screen = pygame.display.set_mode((sx, sy), 0, 32)
 
 class Player:
     def __init__(self):
@@ -18,20 +20,25 @@ class Player:
         self.ml: bool = False
         self.mr: bool = False
         self.mu: bool = False
-        self.cj: bool = False
+        self.cj = 2
         self.xhitbox: bool = True
         self.yhitbox: bool = True
         self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
     
     def draw(self):
         playe = pygame.Rect(self.x, self.y, 50, 50)
-        pygame.draw.rect(screen, (0, 0, 0), playe)
+        pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.x -= 3
-        if self.mr == True:
-            self.x += 3
+            self.xspeed = -3
+        if self.mr:
+            self.xspeed = 3
+        if self.mr == False and self.ml == False:
+            self.xspeed = 0
         if self.mu == True:
             self.yspeed = -7
         self.x += self.xspeed
         self.y += self.yspeed
+    def screen_scrolling(self):
+        if self.x >= sx / 2:
+            print('gx')

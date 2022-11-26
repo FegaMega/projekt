@@ -64,16 +64,19 @@ while r:
                 if abs(object_right - player.x) < collision_tolerance:
                     if player.xspeed < 0:
                         player.x = object_right
+                        player.xspeed = 0
                 if abs(Object.x - player_right) < collision_tolerance:
                     if player.xspeed > 0:
                         player.x = Object.x - player.ysize
+                        player.xspeed = 0
             if player.x >= sx/2:
                 player.x = sx/2
-                Object.x -= player.yspeed
+                Object.x -= player.xspeed
             elif player.x <= 200:
                 player.x = 200
                 Object.x -= player.xspeed
             Object.draw()
+        player.movement()
     i = 0
     ii = 0
     player.draw()

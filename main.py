@@ -72,7 +72,7 @@ while r:
                 Object.x -= player.yspeed
             elif player.x <= 200:
                 player.x = 200
-                Object.x += player.xspeed
+                Object.x -= player.xspeed
             Object.draw()
     i = 0
     ii = 0

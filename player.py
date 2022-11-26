@@ -1,9 +1,5 @@
 import pygame
 from pygame.locals import *
-import objects
-from objects import objekts
-
-objects = objekts()
 
 sx = 700
 sy = 700
@@ -30,13 +26,12 @@ class Player:
         pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.xspeed = -3
+            self.xspeed = -3/3
         if self.mr:
-            self.xspeed = 3
-        if self.mr == False and self.ml == False:
-            self.xspeed = 0
+            self.xspeed = 3/3
+        if self.mr == False and self.ml == False:            self.xspeed = 0
         if self.mu == True:
-            self.yspeed = -7
+            self.yspeed = -9/3
         self.x += self.xspeed
         self.y += self.yspeed
     def screen_scrolling(self):

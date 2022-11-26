@@ -21,20 +21,17 @@ class Player:
         self.yhitbox: bool = True
         self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
     
-    def draw(self):
-        playe = pygame.Rect(self.x, self.y, 50, 50)
+    def draw(self, scrollx, scrolly):
+        playe = pygame.Rect(self.x - scrollx, self.y - scrolly, 50, 50)
         pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.xspeed = -3/10
+            self.xspeed = -3/8
         if self.mr:
-            self.xspeed = 3/10
+            self.xspeed = 3/8
         if self.mr == False and self.ml == False:           
             self.xspeed = 0
         if self.mu == True:
-            self.yspeed = -9/9
+            self.yspeed = -9/11
         self.x += self.xspeed
         self.y += self.yspeed
-    def screen_scrolling(self):
-        if self.x >= sx / 2:
-            print('gx')

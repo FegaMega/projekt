@@ -1,13 +1,13 @@
 import pygame
 from pygame.locals import *
 
-sx = 700
-sy = 700
+sx = 800
+sy = 800
 screen = pygame.display.set_mode((sx, sy), 0, 32)
 
 class Player:
     def __init__(self):
-        self.x = 0
+        self.x = 250
         self.y = 650
         self.xsize = 50
         self.ysize = 50
@@ -26,12 +26,13 @@ class Player:
         pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.xspeed = -3/3
+            self.xspeed = -3/10
         if self.mr:
-            self.xspeed = 3/3
-        if self.mr == False and self.ml == False:            self.xspeed = 0
+            self.xspeed = 3/10
+        if self.mr == False and self.ml == False:           
+            self.xspeed = 0
         if self.mu == True:
-            self.yspeed = -9/3
+            self.yspeed = -9/9
         self.x += self.xspeed
         self.y += self.yspeed
     def screen_scrolling(self):

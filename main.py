@@ -12,7 +12,7 @@ scroll = [0,0]
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 
-coins = [coin(100, 700, 50, 50, (0, 255, 255))]
+coins = [coin(100, 700, 41, 50)]
 Objects = [objects(50,700,50,50, (0,0,0)), objects(500, 750, 50, 50, (255,255,255)), objects(475, 700, 100, 50, (255,0,0))]
 player = Player()
 collision_tolerance = 3
@@ -29,9 +29,9 @@ while r:
                 player.ml = True
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = True
-            if event.key == K_w and player.cj > 0 or event.key == K_UP and player.cj > 0:
+            if event.key == K_w and player.jumps > 0 or event.key == K_UP and player.jumps > 0:
                 player.mu = True
-                player.cj -= 1
+                player.jumps -= 1
         if event.type == pygame.KEYUP:
             if event.key == K_a or event.key == K_LEFT:
                 player.ml = False
@@ -49,7 +49,7 @@ while r:
         player.y += player.yspeed
         if player.y >= 750:
             player.y = 750
-            player.cj = 2
+            player.jumps = player.max_jumps
         else:
             player.yspeed += 0.4/60
         for Object in Objects:
@@ -62,7 +62,7 @@ while r:
                     player.y = Object.y - player.ysize
                     if player.yspeed >= 0:
                         player.yspeed = 0
-                        player.cj = 2
+                        player.jumps = player.max_jumps
                 elif abs(object_bottom - player.y) < collision_tolerance:
                     player.y = Object.y + Object.ysize
                     if player.yspeed < 0:
@@ -81,11 +81,12 @@ while r:
             if checkCollisions(coin.x, coin.y, coin.xsize, coin.ysize, player.x, player.y, player.xsize, player.ysize):
                 coin.coinscollected += 1
                 coin.render = False
+                player.max_jumps += 1
         coin.draw(scroll[0], scroll[1])
     i = 0
     ii = 0
     player.draw(scroll[0], scroll[1])
-    jumps_left = FONT.render(("jumps left: " + str(player.cj)), 1, (0, 0, 0))
+    jumps_left = FONT.render(("jumps left: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))
     coinscollected = FONT.render(("coins collected: " + str(coin.coinscollected)), 1, (0, 0, 0))
     screen.blit(coinscollected, (10, 50))

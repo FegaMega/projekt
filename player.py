@@ -16,8 +16,8 @@ class Player:
         self.ml: bool = False
         self.mr: bool = False
         self.mu: bool = False
-        self.jumps = 2
-        self.max_jumps = 2
+        self.jumps = 0
+        self.max_jumps = 0
         self.xhitbox: bool = True
         self.yhitbox: bool = True
         self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)

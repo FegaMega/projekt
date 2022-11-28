@@ -12,10 +12,11 @@ scroll = [0,0]
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 
-coins = [coin(100, 600), coin(500, 400)]
-Objects = [objects(50,600,50,50, (0,0,0)), objects(500, 650, 50, 50, (255,255,255)), objects(475, 600, 100, 50, (255,0,0))]
+coins = [coin(100, 600), coin(500, 400), coin(-41, sy - 50)]
+Objects = [objects(50,600,50,50, (0,0,0)), objects(500, 650, 50, 50, (255,255,255)), objects(475, 600, 100, 50, (255,0,0)), objects(900, 500, 50, 200, (0, 0, 0))]
 player = Player()
 collision_tolerance = 3
+coinscollected = 0
 i = 0
 r = True
 while r:
@@ -76,18 +77,18 @@ while r:
                         player.x = Object.x - player.ysize
                         player.xspeed = 0
             Object.draw(scroll[0], scroll[1])
-    for coin in i:
-        if coin.render == True:
-            if checkCollisions(coin.x, coin.y, coin.xsize, coin.ysize, player.x, player.y, player.xsize, player.ysize):
-                coin.coinscollected += 1
-                coins.pop(i)
+    for Coin in coins:
+        if Coin.render == True:
+            if checkCollisions(Coin.x, Coin.y, Coin.xsize, Coin.ysize, player.x, player.y, player.xsize, player.ysize):
+                coinscollected += 1
+                coins.remove(Coin)
                 player.max_jumps += 1
-        coin.draw(scroll[0], scroll[1])
+        Coin.draw(scroll[0], scroll[1])
     player.draw(scroll[0], scroll[1])
-    jumps_left = FONT.render(("jumps left: " + str(player.jumps)), 1, (0, 0, 0))
+    jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))
-    coinscollected = FONT.render(("coins collected: " + str(coin.coinscollected)), 1, (0, 0, 0))
-    screen.blit(coinscollected, (10, 50))
+    coinscollecteddraw = FONT.render(("coins: " + str(coinscollected)), 1, (0, 0, 0))
+    screen.blit(coinscollecteddraw, (10, 50))
     pygame.display.update()
     pygame.time.Clock().tick(60)
     player.mu = False

@@ -95,3 +95,4 @@ while r:
     pygame.display.update()
     pygame.time.Clock().tick(60)
     player.mu = False
+    

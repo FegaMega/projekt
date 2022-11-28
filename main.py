@@ -6,10 +6,12 @@ from Object import objects
 from utils import checkCollisions
 from Extra_jump import extra_jump
 from tunnels import tunnel
+from portals import portal
 sx = 700
 sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
 scroll = [0,0]
+TPallow: bool = True
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 
@@ -26,6 +28,9 @@ Objects = [
 ]
 tunnels = [
     tunnel(1000, 650, 300, 50, (255, 0, 0))
+]
+portals = [
+    portal(350, 650, 1400, 650)
 ]
 player = Player()
 collision_tolerance = 3
@@ -107,7 +112,20 @@ while r:
                     if player.yspeed < 0:
                         player.yspeed = 0
                     player.in_tunnel = False
-
+        for portal in portals:
+            if checkCollisions(portal.xB, portal.yB, portal.xsizeB, portal.ysizeB, player.x, player.y, player.xsize, player.ysize) and TPallow == True:
+                player.x = portal.xR
+                player.y = portal.yR
+                TPallow = False
+                print('tp')
+            if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, player.x, player.y, player.xsize, player.ysize) and TPallow == True:
+                player.x = portal.xB
+                player.y = portal.yB
+                print('tp')
+                TPallow = False
+            if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, player.x, player.y, player.xsize, player.ysize) == False and checkCollisions(portal.xB, portal.yB, portal.xsizeB, portal.ysizeB, player.x, player.y, player.xsize, player.ysize) == False:
+                TPallow = True
+            portal.draw(scroll[0], scroll[1])
     for Extra_jump in extra_jumps:
         if Extra_jump.render == True:
             if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):

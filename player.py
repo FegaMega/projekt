@@ -17,12 +17,12 @@ class Player:
         self.mr: bool = False
         self.mu: bool = False
         self.jumps = 0
+        self.TPallow: bool = True
         self.max_jumps = 0
         self.in_tunnel = False
         self.xhitbox: bool = True
         self.yhitbox: bool = True
         self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
-    
     def draw(self, scrollx, scrolly):
         playe = pygame.Rect(self.x - scrollx, self.y - scrolly, 50, 50)
         pygame.draw.rect(screen, (0, 255, 0), playe)

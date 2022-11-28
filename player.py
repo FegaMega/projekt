@@ -1,8 +1,8 @@
 import pygame
 from pygame.locals import *
 
-sx = 800
-sy = 800
+sx = 700
+sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
 
 class Player:

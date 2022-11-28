@@ -1,14 +1,14 @@
 import pygame
 
 
-screen = pygame.display.set_mode((800, 800), 0, 32)
+screen = pygame.display.set_mode((700, 700), 0, 32)
 
 class coin:
-    def __init__(self, x, y, xsize, ysize):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.xsize = xsize
-        self.ysize = ysize
+        self.xsize = 41
+        self.ysize = 50
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
         self.render: bool = True
         self.coinscollected = 0

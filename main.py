@@ -4,7 +4,8 @@ from pygame.locals import *
 from player import Player
 from Object import objects
 from utils import checkCollisions
-from coins import coin
+from Extra_jump import extra_jump
+from tunnels import tunnel
 sx = 700
 sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
@@ -12,8 +13,20 @@ scroll = [0,0]
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 
-coins = [coin(100, 600), coin(500, 400), coin(-41, sy - 50)]
-Objects = [objects(50,600,50,50, (0,0,0), True), objects(500, 650, 50, 50, (255,255,255), True), objects(475, 600, 100, 50, (255,0,0), True), objects(900, 500, 50, 200, (0, 0, 0), True), objects(1000, 650, 300, 50, (0, 0, 0), False), objects(1000, 600, 300, 50, (0, 0, 0), True)]
+extra_jumps = [
+    extra_jump(100, 600), 
+    extra_jump(500, 400), 
+    extra_jump(-41, sy - 50)
+]
+Objects = [
+    objects(50,600,50,50, (0,0,0)), 
+    objects(500, 650, 50, 50, (255,255,255)), 
+    objects(475, 600, 100, 50, (255,0,0)), 
+    objects(900, 500, 50, 200, (0, 0, 0)), 
+]
+tunnels = [
+    tunnel(1000, 600, 300, 100, (255, 0, 0))
+]
 player = Player()
 collision_tolerance = 3
 coinscollected = 0
@@ -45,7 +58,7 @@ while r:
     if scroll[1] > 0:
         scroll[1] = 0
 
-    for ii in range (10):
+    for i in range(10):
         player.movement()
         player.y += player.yspeed
         if player.y >= sy - 50:
@@ -54,45 +67,56 @@ while r:
         else:
             player.yspeed += 0.4/60
         for Object in Objects:
-            if Object.col == True:
-                if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, player.x, player.y, player.xsize, player.ysize):
-                    player_bottom = player.y  + player.ysize
-                    player_right = player.x + player.xsize
-                    object_bottom = Object.y + Object.ysize
-                    object_right = Object.x + Object.xsize
-                    if abs(Object.y - player_bottom) < collision_tolerance:
-                        player.y = Object.y - player.ysize
-                        if player.yspeed >= 0:
-                            player.yspeed = 0
-                            player.jumps = player.max_jumps
-                    elif abs(object_bottom - player.y) < collision_tolerance:
-                        player.y = Object.y + Object.ysize
-                        if player.yspeed < 0:
-                            player.yspeed = 0
-                    elif abs(object_right - player.x) < collision_tolerance:
-                        if player.xspeed < 0:
-                            player.x = object_right
-                            player.xspeed = 0
-                    elif abs(Object.x - player_right) < collision_tolerance:
-                        if player.xspeed > 0:
-                            player.x = Object.x - player.ysize
-                            player.xspeed = 0
-            
-    for Coin in coins:
-        if Coin.render == True:
-            if checkCollisions(Coin.x, Coin.y, Coin.xsize, Coin.ysize, player.x, player.y, player.xsize, player.ysize):
-                coinscollected += 1
-                coins.remove(Coin)
+            if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, player.x, player.y, player.xsize, player.ysize):
+                player_bottom = player.y  + player.ysize
+                player_right = player.x + player.xsize
+                object_bottom = Object.y + Object.ysize
+                object_right = Object.x + Object.xsize
+                if abs(Object.y - player_bottom) < collision_tolerance:
+                    player.y = Object.y - player.ysize
+                    if player.yspeed >= 0:
+                        player.yspeed = 0
+                        player.jumps = player.max_jumps
+                elif abs(object_bottom - player.y) < collision_tolerance:
+                    player.y = object_bottom
+                    if player.yspeed < 0:
+                        player.yspeed = 0
+                elif abs(object_right - player.x) < collision_tolerance:
+                    if player.xspeed < 0:
+                        player.x = object_right
+                        player.xspeed = 0
+                elif abs(Object.x - player_right) < collision_tolerance:
+                    if player.xspeed > 0:
+                        player.x = Object.x - player.ysize
+                        player.xspeed = 0
+    
+        for tunnel in tunnels:
+            if checkCollisions(tunnel.x, tunnel.y, tunnel.xsize, tunnel.ysize, player.x, player.y, player.xsize, player.ysize):
+                player_bottom = player.y  + player.ysize
+                tunnel_bottom = tunnel.y + tunnel.ysize
+                if abs(tunnel.y - player_bottom) < collision_tolerance:
+                    player.y = tunnel.y - player.ysize
+                    if player.yspeed >= 0:
+                        player.yspeed = 0
+                        player.jumps = player.max_jumps
+                elif abs(tunnel_bottom - player.y) < collision_tolerance:
+                    player.y = tunnel.y + tunnel.ysize
+                    if player.yspeed < 0:
+                        player.yspeed = 0
+
+    for Extra_jump in extra_jumps:
+        if Extra_jump.render == True:
+            if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
+                extra_jumps.remove(Extra_jump)
                 player.max_jumps += 1
-        Coin.draw(scroll[0], scroll[1])
+        Extra_jump.draw(scroll[0], scroll[1])
     player.draw(scroll[0], scroll[1])
     for Object in Objects:
         Object.draw(scroll[0], scroll[1])
+    for tunnel in tunnels:
+        tunnel.draw(scroll[0], scroll[1])
     jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))
-    coinscollecteddraw = FONT.render(("coins: " + str(coinscollected)), 1, (0, 0, 0))
-    screen.blit(coinscollecteddraw, (10, 50))
     pygame.display.update()
     pygame.time.Clock().tick(60)
     player.mu = False
-    

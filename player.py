@@ -18,6 +18,7 @@ class Player:
         self.mu: bool = False
         self.jumps = 0
         self.max_jumps = 0
+        self.in_tunnel = False
         self.xhitbox: bool = True
         self.yhitbox: bool = True
         self.playe = pygame.Rect(self.x, self.y, self.xsize, self.ysize)

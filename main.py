@@ -25,7 +25,7 @@ Objects = [
     objects(900, 500, 50, 200, (0, 0, 0)), 
 ]
 tunnels = [
-    tunnel(1000, 600, 300, 100, (255, 0, 0))
+    tunnel(1000, 650, 300, 50, (255, 0, 0))
 ]
 player = Player()
 collision_tolerance = 3
@@ -43,7 +43,7 @@ while r:
                 player.ml = True
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = True
-            if event.key == K_w and player.jumps > 0 or event.key == K_UP and player.jumps > 0:
+            if event.key == K_w and player.jumps > 0 and player.in_tunnel == False or event.key == K_UP and player.jumps > 0 and player.in_tunnel == False:
                 player.mu = True
                 player.jumps -= 1
         if event.type == pygame.KEYUP:
@@ -51,6 +51,7 @@ while r:
                 player.ml = False
             if event.key == K_d or event.key == K_RIGHT:
                 player.mr = False
+    player.in_tunnel = False
 
 
     scroll[0] += (player.x-scroll[0] - sy/2)/10
@@ -92,6 +93,7 @@ while r:
     
         for tunnel in tunnels:
             if checkCollisions(tunnel.x, tunnel.y, tunnel.xsize, tunnel.ysize, player.x, player.y, player.xsize, player.ysize):
+                player.in_tunnel = True
                 player_bottom = player.y  + player.ysize
                 tunnel_bottom = tunnel.y + tunnel.ysize
                 if abs(tunnel.y - player_bottom) < collision_tolerance:
@@ -99,10 +101,12 @@ while r:
                     if player.yspeed >= 0:
                         player.yspeed = 0
                         player.jumps = player.max_jumps
+                    player.in_tunnel = False
                 elif abs(tunnel_bottom - player.y) < collision_tolerance:
                     player.y = tunnel.y + tunnel.ysize
                     if player.yspeed < 0:
                         player.yspeed = 0
+                    player.in_tunnel = False
 
     for Extra_jump in extra_jumps:
         if Extra_jump.render == True:

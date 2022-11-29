@@ -35,7 +35,7 @@ portals = [
     portal(350, 650, 1400, 650)
 ]
 gun = (  
-    Pistol(player.x, player.y, 90)
+    Pistol(player.x, player.y, 0)
 )
 
 collision_tolerance = 3
@@ -58,7 +58,7 @@ while r:
             if event.key == K_a:
                 gun.change_angle = 10
             if event.key == K_d:
-                gun.change_angle = 10
+                gun.change_angle = -10
         if event.type == pygame.KEYUP:
             if event.key == K_LEFT:
                 player.ml = False
@@ -152,7 +152,8 @@ while r:
     if gun.rotateright == True:
         gun.angle += 2
     gun.rot()
-    gun.draw(scroll[0], scroll[1], screen)
+    gun.x = player.x + 10
+    gun.y = player.y + 20
     for Extra_jump in extra_jumps:
         if Extra_jump.render == True:
             if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
@@ -160,6 +161,7 @@ while r:
                 player.max_jumps += 1
         Extra_jump.draw(scroll[0], scroll[1])
     player.draw(scroll[0], scroll[1])
+    gun.draw(scroll[0], scroll[1], screen)
     for Object in Objects:
         Object.draw(scroll[0], scroll[1])
     for tunnel in tunnels:

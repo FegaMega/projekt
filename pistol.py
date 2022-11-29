@@ -8,15 +8,15 @@ class Pistol:
     def __init__(self, x, y, angle):
         self.x = x
         self.y = y
-        self.xsize = 49
-        self.ysize = 22
+        self.xsize = 25
+        self.ysize = 15
         self.angle = angle
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
         self.rotateleft = False
         self.rotateright = False
         self.change_angle = 0
-        self.og_surf = pygame.transform.smoothscale(pygame.image.load("rectangle.png").convert_alpha(), (self.xsize, self.ysize))
+        self.og_surf = pygame.transform.smoothscale(pygame.image.load("gun.png").convert_alpha(), (self.xsize, self.ysize))
         self.surf = self.og_surf
 
     def rot(self):

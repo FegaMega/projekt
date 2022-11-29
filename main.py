@@ -3,10 +3,11 @@ import sys
 from pygame.locals import * 
 from player import Player
 from Object import objects
-from utils import checkCollisions
+from utils import checkCollisions, rot_center
 from Extra_jump import extra_jump
 from tunnels import tunnel
 from portals import portal
+from pistol import Pistol
 sx = 700
 sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
@@ -14,10 +15,11 @@ scroll = [0,0]
 TPallow: bool = True
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
+player = Player()
 
 extra_jumps = [
     extra_jump(100, 600), 
-    extra_jump(500, 400), 
+    extra_jump(500, 300), 
     extra_jump(-41, sy - 50)
 ]
 Objects = [
@@ -32,30 +34,45 @@ tunnels = [
 portals = [
     portal(350, 650, 1400, 650)
 ]
-player = Player()
+gun = (  
+    Pistol(player.x, player.y, 90)
+)
+
 collision_tolerance = 3
 coinscollected = 0
 i = 0
 r = True
 while r:
     screen.fill((146,244,255))
-
     for event in pygame.event.get():
         if event.type == QUIT:
             r = False
         if event.type == pygame.KEYDOWN:
-            if event.key == K_a or event.key == K_LEFT:
+            if event.key == K_LEFT:
                 player.ml = True
-            if event.key == K_d or event.key == K_RIGHT:
+            if event.key == K_RIGHT:
                 player.mr = True
-            if event.key == K_w and player.jumps > 0 and player.in_tunnel == False or event.key == K_UP and player.jumps > 0 and player.in_tunnel == False:
+            if event.key == K_UP and player.jumps > 0 and player.in_tunnel == False:
                 player.mu = True
                 player.jumps -= 1
+            if event.key == K_a:
+                gun.change_angle = 10
+            if event.key == K_d:
+                gun.change_angle = 10
         if event.type == pygame.KEYUP:
-            if event.key == K_a or event.key == K_LEFT:
+            if event.key == K_LEFT:
                 player.ml = False
-            if event.key == K_d or event.key == K_RIGHT:
+            if event.key == K_RIGHT:
                 player.mr = False
+            if event.key == K_a:
+                gun.rotleft = False
+            if event.key == K_d:
+                gun.rotleft = False
+            if event.key == K_d:
+                gun.change_angle = 0
+            if event.key == K_a:
+                gun.change_angle = 0
+            
     player.in_tunnel = False
 
 
@@ -95,7 +112,11 @@ while r:
                     if player.xspeed > 0:
                         player.x = Object.x - player.ysize
                         player.xspeed = 0
-    
+
+
+
+
+
         for tunnel in tunnels:
             if checkCollisions(tunnel.x, tunnel.y, tunnel.xsize, tunnel.ysize, player.x, player.y, player.xsize, player.ysize):
                 player.in_tunnel = True
@@ -126,6 +147,12 @@ while r:
             if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, player.x, player.y, player.xsize, player.ysize) == False and checkCollisions(portal.xB, portal.yB, portal.xsizeB, portal.ysizeB, player.x, player.y, player.xsize, player.ysize) == False:
                 TPallow = True
             portal.draw(scroll[0], scroll[1])
+    if gun.rotateleft == True:
+        gun.angle -= 2
+    if gun.rotateright == True:
+        gun.angle += 2
+    gun.rot()
+    gun.draw(scroll[0], scroll[1], screen)
     for Extra_jump in extra_jumps:
         if Extra_jump.render == True:
             if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
@@ -137,6 +164,7 @@ while r:
         Object.draw(scroll[0], scroll[1])
     for tunnel in tunnels:
         tunnel.draw(scroll[0], scroll[1])
+
     jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))
     pygame.display.update()

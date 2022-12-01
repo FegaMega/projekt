@@ -8,6 +8,7 @@ from Extra_jump import extra_jump
 from tunnels import tunnel
 from portals import portal
 from pistol import Pistol
+from bullet import bullet
 sx = 700
 sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
@@ -35,8 +36,11 @@ portals = [
     portal(350, 650, 1400, 650)
 ]
 gun = (  
-    Pistol(player.x, player.y, 0)
+    Pistol(player.x, player.y, 90)
 )
+bullets = [
+    bullet(gun.x + gun.xsize, gun.y + 2, 3, gun.angle)
+]
 
 collision_tolerance = 3
 coinscollected = 0
@@ -166,6 +170,9 @@ while r:
         Object.draw(scroll[0], scroll[1])
     for tunnel in tunnels:
         tunnel.draw(scroll[0], scroll[1])
+    for bullet in bullets:
+        bullet.move()
+        bullet.draw(screen, scroll[0], scroll[1])
 
     jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))

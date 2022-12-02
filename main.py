@@ -159,8 +159,17 @@ while r:
 
     for Bullet in bullets:
         Bullet.move()
+        for portal in portals:
+            if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
+                bullets.remove(Bullet)
+        for tunnel in tunnels:
+            if checkCollisions(tunnel.x, tunnel.y, tunnel.xsize, tunnel.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
+                bullets.remove(Bullet)
+        for Object in Objects:
+            if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
+                bullets.remove(Bullet)
         Bullet.draw(screen, scroll[0], scroll[1])
-        if Bullet.frames_drawn > 180:
+        if Bullet.frames_drawn > 500:
             bullets.remove(Bullet)
         Bullet.frames_drawn += 1
     gun.rot()

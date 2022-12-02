@@ -1,5 +1,4 @@
-import pygame
-import sys
+import pygame, time
 from pygame.locals import * 
 from player import Player
 from Object import objects
@@ -39,9 +38,9 @@ gun = (
     Pistol(player.x, player.y, 90)
 )
 bullets = [
-    bullet(gun.x + gun.xsize, gun.y + 2, 3, gun.angle)
+    
 ]
-
+now = pygame.time.Clock().get_time
 collision_tolerance = 3
 coinscollected = 0
 i = 0
@@ -63,6 +62,8 @@ while r:
                 gun.change_angle = 10
             if event.key == K_d:
                 gun.change_angle = -10
+            if event.key == K_SPACE:
+                bullets.append(bullet(gun.x, gun.y + 3, 3, gun.angle))
         if event.type == pygame.KEYUP:
             if event.key == K_LEFT:
                 player.ml = False
@@ -155,6 +156,13 @@ while r:
         gun.angle -= 2
     if gun.rotateright == True:
         gun.angle += 2
+
+    for Bullet in bullets:
+        Bullet.move()
+        Bullet.draw(screen, scroll[0], scroll[1])
+        if Bullet.frames_drawn > 180:
+            bullets.remove(Bullet)
+        Bullet.frames_drawn += 1
     gun.rot()
     gun.x = player.x + 10
     gun.y = player.y + 20
@@ -170,9 +178,7 @@ while r:
         Object.draw(scroll[0], scroll[1])
     for tunnel in tunnels:
         tunnel.draw(scroll[0], scroll[1])
-    for bullet in bullets:
-        bullet.move()
-        bullet.draw(screen, scroll[0], scroll[1])
+    
 
     jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))
     screen.blit(jumps_left, (10, 10))

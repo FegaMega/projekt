@@ -157,6 +157,17 @@ while r:
     if gun.rotateright == True:
         gun.angle += 2
 
+
+    gun.rot()
+    gun.x = player.x + 10
+    gun.y = player.y + 20
+    for Extra_jump in extra_jumps:
+        if Extra_jump.render == True:
+            if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
+                extra_jumps.remove(Extra_jump)
+                player.max_jumps += 1
+        Extra_jump.draw(scroll[0], scroll[1])
+    player.draw(scroll[0], scroll[1])
     for Bullet in bullets:
         Bullet.move()
         for portal in portals:
@@ -172,16 +183,6 @@ while r:
         if Bullet.frames_drawn > 500:
             bullets.remove(Bullet)
         Bullet.frames_drawn += 1
-    gun.rot()
-    gun.x = player.x + 10
-    gun.y = player.y + 20
-    for Extra_jump in extra_jumps:
-        if Extra_jump.render == True:
-            if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
-                extra_jumps.remove(Extra_jump)
-                player.max_jumps += 1
-        Extra_jump.draw(scroll[0], scroll[1])
-    player.draw(scroll[0], scroll[1])
     gun.draw(scroll[0], scroll[1], screen)
     for Object in Objects:
         Object.draw(scroll[0], scroll[1])

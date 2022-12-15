@@ -8,6 +8,7 @@ from tunnels import tunnel
 from portals import portal
 from pistol import Pistol
 from bullet import bullet
+import json_levels
 sx = 700
 sy = 700
 screen = pygame.display.set_mode((sx, sy), 0, 32)
@@ -16,6 +17,11 @@ TPallow: bool = True
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 player = Player()
+level = [[465, 37, 33, 55, [77, 135, 201], "object"], [375, 576, 100, 50, [194, 60, 60], "object"]]
+nlev = ""
+lev = []
+i = 0
+
 
 extra_jumps = [
     extra_jump(100, 600), 
@@ -23,10 +29,7 @@ extra_jumps = [
     extra_jump(-41, sy - 50)
 ]
 Objects = [
-    objects(50,600,50,50, (0,0,0)), 
-    objects(500, 650, 50, 50, (255,255,255)), 
-    objects(475, 600, 100, 50, (255,0,0)), 
-    objects(900, 500, 50, 200, (0, 0, 0)), 
+    
 ]
 tunnels = [
     tunnel(1000, 650, 300, 50, (255, 0, 0))
@@ -40,6 +43,14 @@ gun = (
 bullets = [
     
 ]
+for n in level:
+    lev = level[i]
+    if lev[len(lev) - 1] == "object":
+        del(lev[len(lev) - 1])
+    Objects.append(objects(lev[0], lev[1], lev[2], lev[3], lev[4]))
+    i += 1
+i = 0
+
 now = pygame.time.Clock().get_time
 collision_tolerance = 3
 coinscollected = 0
@@ -147,7 +158,6 @@ while r:
             if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, player.x, player.y, player.xsize, player.ysize) and TPallow == True:
                 player.x = portal.xB
                 player.y = portal.yB
-                print('tp')
                 TPallow = False
             if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, player.x, player.y, player.xsize, player.ysize) == False and checkCollisions(portal.xB, portal.yB, portal.xsizeB, portal.ysizeB, player.x, player.y, player.xsize, player.ysize) == False:
                 TPallow = True

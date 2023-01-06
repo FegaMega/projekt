@@ -1,6 +1,6 @@
 import pygame
 from utils import rot_center
-from pygame.locals import (K_LEFT, K_RIGHT)
+
 
 
 
@@ -11,7 +11,6 @@ class Pistol:
         self.xsize = 25
         self.ysize = 15
         self.angle = angle
-        self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
         self.rotateleft = False
         self.rotateright = False

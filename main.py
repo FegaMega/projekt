@@ -17,7 +17,7 @@ TPallow: bool = True
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 player = Player()
-level = [[465, 37, 33, 55, [77, 135, 201], "object"], [375, 576, 100, 50, [194, 60, 60], "object"]]
+level = [[0.0, 650.0, 50, 50, [194, 60, 60], "object"], [50.0, 600.0, 100, 100, [0, 0, 0], "object"]]
 nlev = ""
 lev = []
 i = 0

@@ -18,7 +18,8 @@ class Player:
         self.mu: bool = False
         self.jumps = 0
         self.TPallow: bool = True
-        self.max_jumps = 0
+        self.on_floor: bool = False
+        self.max_jumps = 1
         self.in_tunnel = False
         self.xhitbox: bool = True
         self.yhitbox: bool = True
@@ -37,3 +38,6 @@ class Player:
             self.yspeed = -9/11
         self.x += self.xspeed
         self.y += self.yspeed
+        self.bottom:float = self.y + self.ysize
+        self.right: float = self.x + self.xsize 
+        self.collision_lines = [[self.right - 5, self.y + 5, 10, 1, "right"], [self.x - 5, self.bottom - 5, 10, 1, "left"], [self.x + 5, self.bottom - 5, 1, 10, "down"], [self.right - 5, self.bottom - 5, 1, 10, "down"], [self.right - 5, self.bottom - 5, 10, 1, "right"], [self.x - 5, self.y + 5, 10, 1, "left"], [self.x + 5, self.y - 5, 1, 10, "up"], [self.right - 5, self.y - 5, 1, 10, "up"]]

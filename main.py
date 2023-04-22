@@ -1,7 +1,7 @@
 import pygame, time
 from pygame.locals import * 
 from player import Player
-from Object import objects
+from Object import Level
 from utils import checkCollisions, rot_center
 from Extra_jump import extra_jump
 from tunnels import tunnel
@@ -17,7 +17,7 @@ TPallow: bool = True
 pygame.init()
 FONT = pygame.font.SysFont("Helvetica-bold", 50)
 player = Player()
-level = [[250.0, 650.0, 50, 50, [194, 60, 60], "object"], [650.0, 650.0, 50, 50, [0, 0, 0], "object"]]
+json_level = [[250.0, 650.0, 50, 50, [194, 60, 60], "object"], [650.0, 650.0, 50, 50, [0, 0, 0], "object"]]
 nlev = ""
 lev = []
 i = 0
@@ -28,7 +28,7 @@ extra_jumps = [
     extra_jump(500, 300), 
     extra_jump(-41, sy - 50)
 ]
-Objects = [
+Level = [
     
 ]
 tunnels = [
@@ -44,12 +44,19 @@ bullets = [
     
 ]
 for ExtraJumps in extra_jumps:
-    Objects.append(extra_jump(ExtraJumps.x, ExtraJumps.y, "ExtraJumps"))
+    Level.append(extra_jump(ExtraJumps.x, ExtraJumps.y, "ExtraJumps"))
 for Tunnel in tunnels:
-    Objects.append(tunnel(Tunnel.x, Tunnel.y, Tunnel.xsize, Tunnel.ysize, Tunnel.color, "Tunnel"))
+    Level.append(tunnel(Tunnel.x, Tunnel.y, Tunnel.xsize, Tunnel.ysize, Tunnel.color, "Tunnel"))
 for Portal in portals:
-    Objects.append(portal(Portal.xB, Portal.yB, Portal.xR, Portal.yR, "Portal"))
-print(Objects[0])
+    Level.append(portal(Portal.xB, Portal.yB, Portal.xR, Portal.yR, "Portal"))
+for n in json_level:
+    lev = json_level[i]
+    if lev[len(lev) - 1] == "object":
+        del(lev[len(lev) - 1])
+    Level.append(Level(lev[0], lev[1], lev[2], lev[3], lev[4]))
+    i += 1
+i = 0
+
 
 now = pygame.time.Clock().get_time
 collision_tolerance = 3
@@ -105,7 +112,7 @@ while r:
             player.jumps = player.max_jumps
         else:
             player.yspeed += 0.4/60
-        for Object in Objects:
+        for Object in Level:
             if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, player.x, player.y, player.xsize, player.ysize):
                 player_bottom = player.y  + player.ysize
                 player_right = player.x + player.xsize
@@ -172,15 +179,14 @@ while r:
     gun.x = player.x + 10
     gun.y = player.y + 20
     for Extra_jump in extra_jumps:
-        if Extra_jump.render == True:
-            if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
-                extra_jumps.remove(Extra_jump)
-                player.max_jumps += 1
+        if checkCollisions(Extra_jump.x, Extra_jump.y, Extra_jump.xsize, Extra_jump.ysize, player.x, player.y, player.xsize, player.ysize):
+            extra_jumps.remove(Extra_jump)
+            player.max_jumps += 1
         Extra_jump.draw(scroll[0], scroll[1])
     player.draw(scroll[0], scroll[1])
     for Bullet in bullets:
         Bullet.move()
-        for Object in level:
+        for Object in Level:
             if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
                 bullets.remove(Bullet)
         Bullet.draw(screen, scroll[0], scroll[1])
@@ -188,10 +194,9 @@ while r:
             bullets.remove(Bullet)
         Bullet.frames_drawn += 1
     gun.draw(scroll[0], scroll[1], screen)
-    for Object in Objects:
+    for Object in Level:
         Object.draw(scroll[0], scroll[1])
-    for tunnel in tunnels:
-        tunnel.draw(scroll[0], scroll[1])
+
     
 
     jumps_left = FONT.render(("jumps: " + str(player.jumps)), 1, (0, 0, 0))

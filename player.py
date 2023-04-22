@@ -37,3 +37,6 @@ class Player:
             self.yspeed = -9/11
         self.x += self.xspeed
         self.y += self.yspeed
+        self.bottom:float = self.y + self.ysize
+        self.right: float = self.x + self.xsize 
+        self.collision_lines = [[self.x + 5, self.bottom - 5, 1, 10, "down"], [self.right - 5, self.bottom - 5, 1, 10, "down"], [self.right - 5, self.y + 5, 10, 1, "right"], [self.right - 5, self.bottom - 5, 10, 1, "right"], [self.x - 5, self.y + 5, 10, 1, "left"], [self.x - 5, self.bottom - 5, 10, 1, "left"], [self.x + 5, self.y - 5, 1, 10, "up"], [self.right - 5, self.y - 5, 1, 10, "up"]]

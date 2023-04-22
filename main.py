@@ -43,13 +43,13 @@ gun = (
 bullets = [
     
 ]
-for n in level:
-    lev = level[i]
-    if lev[len(lev) - 1] == "object":
-        del(lev[len(lev) - 1])
-    Objects.append(objects(lev[0], lev[1], lev[2], lev[3], lev[4]))
-    i += 1
-i = 0
+for ExtraJumps in extra_jumps:
+    level.append([ExtraJumps.x, ExtraJumps.y, 50, 50, [0, 0, 0], "ExtraJumps"])
+for Tunnel in tunnels:
+    level.append([Tunnel.x, Tunnel.y, 50, 50, [0, 0, 0], "Tunnel"])
+for Portal in portals:
+    level.append([Portal.xB, Portal.yB, 38, 50, [0, 0, 0], "Portal", Portal.xR, Portal.yR])
+print(level)
 
 now = pygame.time.Clock().get_time
 collision_tolerance = 3

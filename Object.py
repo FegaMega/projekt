@@ -3,7 +3,8 @@ import pygame
 screen = pygame.display.set_mode((700, 700), 0, 32)
 
 class objects:
-    def __init__(self, x, y, xsize, ysize, color):
+    def __init__(self, x, y, xsize, ysize, color, extra_info=[]):
+        self.extra_info = extra_info
         self.x = x
         self.y = y
         self.xsize = xsize

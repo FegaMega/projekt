@@ -44,12 +44,12 @@ bullets = [
     
 ]
 for ExtraJumps in extra_jumps:
-    level.append([ExtraJumps.x, ExtraJumps.y, 50, 50, [0, 0, 0], "ExtraJumps"])
+    Objects.append(extra_jump(ExtraJumps.x, ExtraJumps.y, "ExtraJumps"))
 for Tunnel in tunnels:
-    level.append([Tunnel.x, Tunnel.y, 50, 50, [0, 0, 0], "Tunnel"])
+    Objects.append(tunnel(Tunnel.x, Tunnel.y, Tunnel.xsize, Tunnel.ysize, Tunnel.color, "Tunnel"))
 for Portal in portals:
-    level.append([Portal.xB, Portal.yB, 38, 50, [0, 0, 0], "Portal", Portal.xR, Portal.yR])
-print(level)
+    Objects.append(portal(Portal.xB, Portal.yB, Portal.xR, Portal.yR, "Portal"))
+print(Objects[0])
 
 now = pygame.time.Clock().get_time
 collision_tolerance = 3

@@ -3,7 +3,8 @@ import utils
 screen = pygame.display.set_mode((700, 700), 0, 32)
 
 class portal:
-    def __init__(self, xB, yB, xR, yR):
+    def __init__(self, xB, yB, xR, yR, extra_info=[]):
+        self.extra_info = extra_info
         self.xB = xB
         self.yB = yB
         self.xsizeB = 38

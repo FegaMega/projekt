@@ -4,7 +4,8 @@ import pygame
 screen = pygame.display.set_mode((700, 700), 0, 32)
 
 class extra_jump:
-    def __init__(self, x, y):
+    def __init__(self, x, y, extra_info=[]):
+        self.extra_info = extra_info
         self.x = x
         self.y = y
         self.xsize = 50

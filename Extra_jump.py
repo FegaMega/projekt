@@ -11,11 +11,9 @@ class extra_jump:
         self.xsize = 50
         self.ysize = 50
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
-        self.render: bool = True
         self.coinscollected = 0
     def draw(self, scroll_x, scroll_y):
-        if self.render:
-            self.rect = pygame.Rect(self.x - scroll_x, self.y - scroll_y, self.xsize, self.ysize)
-            exjimg = pygame.image.load('power_up2.png').convert_alpha()
-            screen.blit(exjimg, (self.x - scroll_x, self.y - scroll_y))
+        self.rect = pygame.Rect(self.x - scroll_x, self.y - scroll_y, self.xsize, self.ysize)
+        exjimg = pygame.image.load('power_up2.png').convert_alpha()
+        screen.blit(exjimg, (self.x - scroll_x, self.y - scroll_y))
                 

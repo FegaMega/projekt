@@ -180,13 +180,7 @@ while r:
     player.draw(scroll[0], scroll[1])
     for Bullet in bullets:
         Bullet.move()
-        for portal in portals:
-            if checkCollisions(portal.xR, portal.yR, portal.xsizeR, portal.ysizeR, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
-                bullets.remove(Bullet)
-        for tunnel in tunnels:
-            if checkCollisions(tunnel.x, tunnel.y, tunnel.xsize, tunnel.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
-                bullets.remove(Bullet)
-        for Object in Objects:
+        for Object in level:
             if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize):
                 bullets.remove(Bullet)
         Bullet.draw(screen, scroll[0], scroll[1])

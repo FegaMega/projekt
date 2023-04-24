@@ -8,4 +8,3 @@ for n in level:
     if lev[len(lev) - 1] == "object":
         level[i] = (lev[0], lev[1], lev[2], lev[3], (lev[4]))
     i += 1
-print(level)

@@ -36,7 +36,7 @@ Level = [
     
 ]
 tunnels = [
-    tunnel(1000, 650, 300, 50, (255, 0, 0))
+    tunnel(1000, 600, 300, 50, (255, 0, 0))
 ]
 portals = [
     portal(350, 650, 1400, 650)
@@ -155,7 +155,7 @@ while r:
                     if object.__class__ == extra_jump:
                         player.max_jumps += 1
                         #tar bort extra_jump saken
-                        Level.pop(n)
+                        del Level[n]
                     else:
                         #Kollar vilken sida som nuddade objektet med linjer på spelaren  
                         for line in player.collision_lines:

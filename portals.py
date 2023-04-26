@@ -1,6 +1,6 @@
 import pygame
-import utils
-screen = pygame.display.set_mode((700, 700), 0, 32)
+from utils import screen
+
 
 class portal:
     def __init__(self, xB, yB, xR, yR, extra_info=[]):

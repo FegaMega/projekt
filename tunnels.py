@@ -1,6 +1,6 @@
 import pygame
 
-screen = pygame.display.set_mode((700, 700), 0, 32)
+from utils import screen
 
 class tunnel:
     def __init__(self, x, y, xsize, ysize, color, extra_info=[]):

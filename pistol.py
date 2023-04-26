@@ -1,5 +1,5 @@
 import pygame
-from utils import rot_center
+from utils import rot_center, screen
 
 
 

@@ -1,7 +1,7 @@
 import pygame
 
 
-screen = pygame.display.set_mode((700, 700), 0, 32)
+from utils import screen
 
 class extra_jump:
     def __init__(self, x, y, extra_info=[]):

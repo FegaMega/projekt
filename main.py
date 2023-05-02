@@ -95,20 +95,60 @@ class spel:
             # säger att spelaren inte är på golvet
             self.player.yspeed += 0.4 / 60
             self.player.on_floor = False
-    def portalKollision(self):
+    def portalKollision(self,object):
         if checkCollisions(object.xR, object.yR, object.xsizeR, object.ysizeR, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
             if self.TPallow == True:
                 self.player.x = object.xB
                 self.player.y = object.yB
                 self.TPallow = False
-        elif checkCollisions(object.xB, object.yB, object.xsizeB, object.ysizeB, self.player.x, self.player.y,
-                                self.player.xsize, self.player.ysize):
+        elif checkCollisions(object.xB, object.yB, object.xsizeB, object.ysizeB, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
             if self.TPallow == True:
                 self.player.x = object.xR
                 self.player.y = object.yR
                 self.TPallow = False
         else:
             self.TPallow = True
+    def collektebleCheck(self, n):
+        # Kollar om det är en extra_jump
+        if object.__class__ == extra_jump:
+            self.player.max_jumps += 1
+            # tar bort extra_jump saken
+            del self.Level[n]
+    def TunnelKollision(self, line, object):
+        # Kollar ifall spelaren är på/under tunneln eller om den är i
+        if line[4] == "right" or line[4] == "left":
+            self.player.in_tunnel = True
+        if self.player.in_tunnel == False:
+            if line[4] == "down":
+                self.player.y = object.y - self.player.ysize
+                self.player.yspeed = 0
+                self.player.on_floor = True
+            elif line[4] == "up":
+                self.player.y = object.y + object.ysize
+                self.player.yspeed = 0
+    def vanligaObjektsKollision(self, line, object):
+        self.player.in_tunnel = False
+        if line[4] == "right":
+            self.player.x = object.x - self.player.xsize
+            self.player.xspeed = 0
+        elif line[4] == "left":
+            self.player.x = object.x + object.xsize
+            self.player.xspeed = 0
+        elif line[4] == "down":
+            self.player.y = object.y - self.player.ysize
+            self.player.yspeed = 0
+            self.player.on_floor = True
+        elif line[4] == "up":
+            self.player.y = object.y + object.ysize
+            self.player.yspeed = 0
+    def linjeKollisiomMedObjekt(self, object):
+        for line in self.player.collision_lines:
+            if checkCollisions(line[0], line[1], line[2], line[3], object.x, object.y, object.xsize, object.ysize):
+                # vanliga objekt
+                if object.__class__ != tunnel:
+                    self.vanligaObjektsKollision
+                else:
+                    self.TunnelKollision(line, object)
 def main() -> int:
     pygame.init()
     mittSpel = spel()
@@ -143,13 +183,11 @@ def main() -> int:
             for object in mittSpel.Level:
                 # kollar om det är en portal (de är speciella)
                 if object.__class__ == portal:
-                    mittSpel.portalKollision()
+                    mittSpel.portalKollision(object)
                 # vanliga objekts kod
                 else:
                     # Kollar om spelaren är inuti objektet
-                    if checkCollisions(object.x, object.y, object.xsize, object.ysize, mittSpel.player.x,
-                                       mittSpel.player.y, mittSpel.player.xsize,
-                                       mittSpel.player.ysize):
+                    if checkCollisions(object.x, object.y, object.xsize, object.ysize, mittSpel.player.x, mittSpel.player.y, mittSpel.player.xsize, mittSpel.player.ysize):
                         # Kollar om det är en extra_jump
                         if object.__class__ == extra_jump:
                             mittSpel.player.max_jumps += 1
@@ -157,38 +195,7 @@ def main() -> int:
                             del mittSpel.Level[n]
                         else:
                             # Kollar vilken sida som nuddade objektet med linjer på spelaren
-                            for line in mittSpel.player.collision_lines:
-                                if checkCollisions(line[0], line[1], line[2], line[3], object.x, object.y, object.xsize,
-                                                   object.ysize):
-                                    # vanliga objekt
-                                    if object.__class__ != tunnel:
-                                        mittSpel.player.in_tunnel = False
-                                        if line[4] == "right":
-                                            mittSpel.player.x = object.x - mittSpel.player.xsize
-                                            mittSpel.player.xspeed = 0
-                                        elif line[4] == "left":
-                                            mittSpel.player.x = object.x + object.xsize
-                                            mittSpel.player.xspeed = 0
-                                        elif line[4] == "down":
-                                            mittSpel.player.y = object.y - mittSpel.player.ysize
-                                            mittSpel.player.yspeed = 0
-                                            mittSpel.player.on_floor = True
-                                        elif line[4] == "up":
-                                            mittSpel.player.y = object.y + object.ysize
-                                            mittSpel.player.yspeed = 0
-                                    # tunnlar
-                                    else:
-                                        # Kollar ifall spelaren är på/under tunneln eller om den är i
-                                        if line[4] == "right" or line[4] == "left":
-                                            mittSpel.player.in_tunnel = True
-                                        if mittSpel.player.in_tunnel == False:
-                                            if line[4] == "down":
-                                                mittSpel.player.y = object.y - mittSpel.player.ysize
-                                                mittSpel.player.yspeed = 0
-                                                mittSpel.player.on_floor = True
-                                            elif line[4] == "up":
-                                                mittSpel.player.y = object.y + object.ysize
-                                                mittSpel.player.yspeed = 0
+                            mittSpel.linjeKollisiomMedObjekt(object)
                 # lägger till ett så att jag vet att jag är i nästa objekt i listan mittSpel.Level
                 n += 1
             # resetar mina hopp ifall jag är på marken

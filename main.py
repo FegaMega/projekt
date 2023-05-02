@@ -85,6 +85,30 @@ class spel:
         self.scroll[1] += (self.player.y - self.scroll[1] - sy / 2) / 10
         if self.scroll[1] > 0:
             self.scroll[1] = 0
+    def golvCheck(self):
+        # kollar om spelaren är under kamerans botten
+        if self.player.y >= sy - self.player.ysize:
+            self.player.y = sy - self.player.ysize
+            self.player.on_floor = True
+        else:
+            # Gravitation
+            # säger att spelaren inte är på golvet
+            self.player.yspeed += 0.4 / 60
+            self.player.on_floor = False
+    def portalKollision(self):
+        if checkCollisions(object.xR, object.yR, object.xsizeR, object.ysizeR, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
+            if self.TPallow == True:
+                self.player.x = object.xB
+                self.player.y = object.yB
+                self.TPallow = False
+        elif checkCollisions(object.xB, object.yB, object.xsizeB, object.ysizeB, self.player.x, self.player.y,
+                                self.player.xsize, self.player.ysize):
+            if self.TPallow == True:
+                self.player.x = object.xR
+                self.player.y = object.yR
+                self.TPallow = False
+        else:
+            self.TPallow = True
 def main() -> int:
     pygame.init()
     mittSpel = spel()
@@ -114,33 +138,12 @@ def main() -> int:
             # Rör spelaren
             mittSpel.player.movement()
             # kollar om spelaren är under kamerans botten
-            if mittSpel.player.y >= sy - mittSpel.player.ysize:
-                mittSpel.player.y = sy - mittSpel.player.ysize
-                mittSpel.player.on_floor = True
-            else:
-                # Gravitation
-                # säger att spelaren inte är på golvet
-                mittSpel.player.yspeed += 0.4 / 60
-                mittSpel.player.on_floor = False
+            mittSpel.golvCheck()
             # objekt collision loopen
             for object in mittSpel.Level:
                 # kollar om det är en portal (de är speciella)
                 if object.__class__ == portal:
-                    if checkCollisions(object.xR, object.yR, object.xsizeR, object.ysizeR, mittSpel.player.x, mittSpel.player.y,
-                                       mittSpel.player.xsize,
-                                       mittSpel.player.ysize):
-                        if mittSpel.TPallow == True:
-                            mittSpel.player.x = object.xB
-                            mittSpel.player.y = object.yB
-                            mittSpel.TPallow = False
-                    elif checkCollisions(object.xB, object.yB, object.xsizeB, object.ysizeB, mittSpel.player.x, mittSpel.player.y,
-                                         mittSpel.player.xsize, mittSpel.player.ysize):
-                        if mittSpel.TPallow == True:
-                            mittSpel.player.x = object.xR
-                            mittSpel.player.y = object.yR
-                            mittSpel.TPallow = False
-                    else:
-                        mittSpel.TPallow = True
+                    mittSpel.portalKollision()
                 # vanliga objekts kod
                 else:
                     # Kollar om spelaren är inuti objektet

@@ -95,6 +95,8 @@ class spel:
             # säger att spelaren inte är på golvet
             self.player.yspeed += 0.4 / 60
             self.player.on_floor = False
+
+            
     def portalKollision(self,object):
         if checkCollisions(object.xR, object.yR, object.xsizeR, object.ysizeR, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
             if self.TPallow == True:
@@ -146,9 +148,39 @@ class spel:
             if checkCollisions(line[0], line[1], line[2], line[3], object.x, object.y, object.xsize, object.ysize):
                 # vanliga objekt
                 if object.__class__ != tunnel:
-                    self.vanligaObjektsKollision
+                    self.vanligaObjektsKollision(line, object)
                 else:
                     self.TunnelKollision(line, object)
+    def kollision(self):
+        for i in range(10):
+            # sätter N till 0 så att den kan räkna mängden gånger den har gått igenom objekt collsion loopen
+            n = 0
+            # Rör spelaren
+            self.player.movement()
+            # kollar om spelaren är under kamerans botten
+            self.golvCheck()
+            # objekt collision loopen
+            for object in self.Level:
+                # kollar om det är en portal (de är speciella)
+                if object.__class__ == portal:
+                    self.portalKollision(object)
+                # vanliga objekts kod
+                else:
+                    # Kollar om spelaren är inuti objektet
+                    if checkCollisions(object.x, object.y, object.xsize, object.ysize, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
+                        # Kollar om det är en extra_jump
+                        if object.__class__ == extra_jump:
+                            self.player.max_jumps += 1
+                            # tar bort extra_jump saken
+                            del self.Level[n]
+                        else:
+                            # Kollar vilken sida som nuddade objektet med linjer på spelaren
+                            self.linjeKollisiomMedObjekt(object)
+                # lägger till ett så att jag vet att jag är i nästa objekt i listan mittSpel.Level
+                n += 1
+        # resetar mina hopp ifall jag är på marken
+        if self.player.on_floor == True:
+            self.player.jumps = self.player.max_jumps    
 def main() -> int:
     pygame.init()
     mittSpel = spel()
@@ -172,35 +204,7 @@ def main() -> int:
         mittSpel.player.in_tunnel = False
 
         # collision loopen
-        for i in range(10):
-            # sätter N till 0 så att den kan räkna mängden gånger den har gått igenom objekt collsion loopen
-            n = 0
-            # Rör spelaren
-            mittSpel.player.movement()
-            # kollar om spelaren är under kamerans botten
-            mittSpel.golvCheck()
-            # objekt collision loopen
-            for object in mittSpel.Level:
-                # kollar om det är en portal (de är speciella)
-                if object.__class__ == portal:
-                    mittSpel.portalKollision(object)
-                # vanliga objekts kod
-                else:
-                    # Kollar om spelaren är inuti objektet
-                    if checkCollisions(object.x, object.y, object.xsize, object.ysize, mittSpel.player.x, mittSpel.player.y, mittSpel.player.xsize, mittSpel.player.ysize):
-                        # Kollar om det är en extra_jump
-                        if object.__class__ == extra_jump:
-                            mittSpel.player.max_jumps += 1
-                            # tar bort extra_jump saken
-                            del mittSpel.Level[n]
-                        else:
-                            # Kollar vilken sida som nuddade objektet med linjer på spelaren
-                            mittSpel.linjeKollisiomMedObjekt(object)
-                # lägger till ett så att jag vet att jag är i nästa objekt i listan mittSpel.Level
-                n += 1
-            # resetar mina hopp ifall jag är på marken
-            if mittSpel.player.on_floor == True:
-                mittSpel.player.jumps = mittSpel.player.max_jumps
+        mittSpel.kollision()
 
         # Roterar vapnbet
         if mittSpel.gun.rotateleft == True:

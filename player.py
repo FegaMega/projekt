@@ -27,13 +27,13 @@ class Player:
         pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.xspeed = -4/11
+            self.xspeed = -4/10
         if self.mr:
-            self.xspeed = 4/11
+            self.xspeed = 4/10
         if self.mr == False and self.ml == False:           
             self.xspeed = 0
         if self.mu == True:
-            self.yspeed = -10/11
+            self.yspeed = -15/10
         self.x += self.xspeed
         self.y += self.yspeed
         self.bottom:float = self.y + self.ysize

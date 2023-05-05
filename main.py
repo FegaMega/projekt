@@ -85,6 +85,9 @@ class spel:
         self.scroll[1] += (self.player.y - self.scroll[1] - sy / 2) / 10
         if self.scroll[1] > 0:
             self.scroll[1] = 0
+
+
+
     def golvCheck(self):
         # kollar om spelaren är under kamerans botten
         if self.player.y >= sy - self.player.ysize:
@@ -110,12 +113,18 @@ class spel:
                 self.TPallow = False
         else:
             self.TPallow = True
+
+
+
     def collektebleCheck(self, n):
         # Kollar om det är en extra_jump
         if object.__class__ == extra_jump:
             self.player.max_jumps += 1
             # tar bort extra_jump saken
             del self.Level[n]
+
+
+
     def TunnelKollision(self, line, object):
         # Kollar ifall spelaren är på/under tunneln eller om den är i
         if line[4] == "right" or line[4] == "left":
@@ -128,6 +137,9 @@ class spel:
             elif line[4] == "up":
                 self.player.y = object.y + object.ysize
                 self.player.yspeed = 0
+
+
+
     def vanligaObjektsKollision(self, line, object):
         self.player.in_tunnel = False
         if line[4] == "right":
@@ -143,6 +155,9 @@ class spel:
         elif line[4] == "up":
             self.player.y = object.y + object.ysize
             self.player.yspeed = 0
+
+
+
     def linjeKollisiomMedObjekt(self, object):
         for line in self.player.collision_lines:
             if checkCollisions(line[0], line[1], line[2], line[3], object.x, object.y, object.xsize, object.ysize):
@@ -151,10 +166,11 @@ class spel:
                     self.vanligaObjektsKollision(line, object)
                 else:
                     self.TunnelKollision(line, object)
+
+
+
     def kollision(self):
-        for i in range(10):
-            # sätter N till 0 så att den kan räkna mängden gånger den har gått igenom objekt collsion loopen
-            n = 0
+        for i in range(9):
             # Rör spelaren
             self.player.movement()
             # kollar om spelaren är under kamerans botten
@@ -172,15 +188,79 @@ class spel:
                         if object.__class__ == extra_jump:
                             self.player.max_jumps += 1
                             # tar bort extra_jump saken
-                            del self.Level[n]
+                            self.Level.remove(object)
                         else:
                             # Kollar vilken sida som nuddade objektet med linjer på spelaren
                             self.linjeKollisiomMedObjekt(object)
                 # lägger till ett så att jag vet att jag är i nästa objekt i listan mittSpel.Level
-                n += 1
         # resetar mina hopp ifall jag är på marken
         if self.player.on_floor == True:
-            self.player.jumps = self.player.max_jumps    
+            self.player.jumps = self.player.max_jumps
+
+
+
+    def roteraPistol(self):   
+        if self.gun.rotateleft == True:
+            self.gun.angle -= 2
+        if self.gun.rotateright == True:
+            self.gun.angle += 2
+        self.gun.rot() 
+
+
+
+    def centreraPistol(self):
+        # flyttar vapnet till spelaren
+        self.gun.x = self.player.x + 10
+        self.gun.y = self.player.y + 20
+        
+
+
+    def ritaSpelare(self):
+        # ritar spelaren
+        self.player.draw(self.scroll[0], self.scroll[1])
+
+
+
+    def bulletPortalKollision(self, Object, Bullet):
+        if checkCollisions(Object.xB, Object.yB, Object.xsizeB, Object.ysizeB, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True or checkCollisions(Object.xR, Object.yR, Object.xsizeR, Object.ysizeR, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True:
+            self.bullets.remove(Bullet)
+    
+    
+
+    def bulletNormalKollision(self, Object, Bullet):
+        if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True:
+            self.bullets.remove(Bullet)
+
+
+    def bulletPortalCheck(self, Object, Bullet):
+        if Object.__class__ == portal:
+            self.bulletPortalKollision(Object, Bullet)
+        else:
+            self.bulletNormalKollision(Object, Bullet)
+    
+    
+    
+    def bulletÅlderCheck(self, Bullet):
+        if Bullet.frames_drawn > 500:
+                self.bullets.remove(Bullet)
+        Bullet.frames_drawn += 1
+    
+    def bulletKollision(self):
+        for Bullet in self.bullets:
+            Bullet.move()
+            for Object in self.Level:
+                self.bulletPortalCheck(Object, Bullet)
+            Bullet.draw(screen, self.scroll[0], self.scroll[1])
+            # kollar om skotten är gamla
+            self.bulletÅlderCheck(Bullet)
+    def ritaObject(self):
+        # Ritar objekten i mittSpel.Level
+        for Object in self.Level:
+            Object.draw(self.scroll[0], self.scroll[1])
+    def ritaKollisiolinjer(self):
+        for i in self.player.collision_lines:
+            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(i[0] - self.scroll[0], i[1] - self.scroll[1], i[2], i[3]))
+
 def main() -> int:
     pygame.init()
     mittSpel = spel()
@@ -207,58 +287,23 @@ def main() -> int:
         mittSpel.kollision()
 
         # Roterar vapnbet
-        if mittSpel.gun.rotateleft == True:
-            mittSpel.gun.angle -= 2
-        if mittSpel.gun.rotateright == True:
-            mittSpel.gun.angle += 2
-        mittSpel.gun.rot()
+        mittSpel.roteraPistol()
+
         # flyttar vapnet till spelaren
-        mittSpel.gun.x = mittSpel.player.x + 10
-        mittSpel.gun.y = mittSpel.player.y + 20
+        mittSpel.centreraPistol()
 
         # ritar spelaren
-        mittSpel.player.draw(mittSpel.scroll[0], mittSpel.scroll[1])
+        mittSpel.ritaSpelare()
         # Kollar om skotten rör vid ett objekt och flyttar de fram
-        for Bullet in mittSpel.bullets:
-            Bullet.move()
-            for Object in mittSpel.Level:
-                if Object.__class__ == portal:
-                    if checkCollisions(Object.xB,
-                                               Object.yB,
-                                               Object.xsizeB,
-                                               Object.ysizeB,
-                                               Bullet.x,
-                                               Bullet.y,
-                                               Bullet.xsize,
-                                               Bullet.ysize) == True and True == checkCollisions(Object.xR, Object.yR,
-                                                                                                 Object.xsizeR,
-                                                                                                 Object.ysizeR, Bullet.x,
-                                                                                                 Bullet.y,
-                                                                                                 Bullet.xsize, Bullet.ysize):
-                        continue
-                    mittSpel.bullets.remove(Bullet)
-                else:
-                    if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize,
-                                       Bullet.ysize):
-                        mittSpel.bullets.remove(Bullet)
-            Bullet.draw(screen, mittSpel.scroll[0], mittSpel.scroll[1])
-            # kollar om skotten är gamla
-            if Bullet.frames_drawn > 500:
-                mittSpel.bullets.remove(Bullet)
-            Bullet.frames_drawn += 1
+        mittSpel.bulletKollision()
         # Ritar vapnet
         mittSpel.gun.draw(mittSpel.scroll[0], mittSpel.scroll[1], screen)
         # Ritar objekten i mittSpel.Level
-        for Object in mittSpel.Level:
-            Object.draw(mittSpel.scroll[0], mittSpel.scroll[1])
+        mittSpel.ritaObject()
         # ritat kollision linjerna på spelar(tillfällig)
-        for i in mittSpel.player.collision_lines:
-            pygame.draw.rect(screen, (255, 0, 0),
-                             pygame.Rect(i[0] - mittSpel.scroll[0], i[1] - mittSpel.scroll[1], i[2], i[3]))
-
+        mittSpel.ritaKollisiolinjer()
         # Skriver hur många hopp spelaren har kvar på skärmen
-        jumps_left = mittSpel.FONT.render(("jumps: " + str(mittSpel.player.jumps) + "/" + str(mittSpel.player.max_jumps)), True,
-                                          (0, 0, 0))
+        jumps_left = mittSpel.FONT.render(("jumps: " + str(mittSpel.player.jumps) + "/" + str(mittSpel.player.max_jumps)), True, (0, 0, 0))
         screen.blit(jumps_left, (10, 10))
         # uppdaterar skärmen
         pygame.display.update()

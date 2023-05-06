@@ -16,4 +16,3 @@ class extra_jump:
         self.rect = pygame.Rect(self.x - scroll_x, self.y - scroll_y, self.xsize, self.ysize)
         exjimg = pygame.image.load('power_up2.png').convert_alpha()
         screen.blit(exjimg, (self.x - scroll_x, self.y - scroll_y))
-                

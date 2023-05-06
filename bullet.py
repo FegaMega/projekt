@@ -13,6 +13,7 @@ class bullet:
         self.og_surf = pygame.transform.smoothscale(pygame.image.load("bullet.png").convert_alpha(), (self.xsize, self.ysize))
         self.surf = pygame.transform.rotate(self.og_surf, self.angle)
         self.rect = pygame.Rect(self.x, self.y, self.xsize, self.ysize)
+        self.TPallow: bool = True
     def move(self):
         self.x += (math.cos(math.radians(self.angle))) * self.speed
         self.y -= (math.sin(math.radians(self.angle))) * self.speed

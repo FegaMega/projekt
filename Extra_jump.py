@@ -5,7 +5,7 @@ from utils import screen
 
 class extra_jump:
     def __init__(self, x, y, extra_info=[]):
-        self.extra_info = extra_info
+        self.extra_info = ["collectible"]
         self.x = x
         self.y = y
         self.xsize = 50

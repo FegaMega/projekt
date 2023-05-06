@@ -169,6 +169,7 @@ class spel:
 
 
 
+
     def kollision(self):
         # sätter player.in_tunnel av för collision loopen
         self.player.in_tunnel = False
@@ -245,9 +246,21 @@ class spel:
             self.bullets.remove(Bullet)
 
 
-    def bulletPortalCheck(self, Object, Bullet):
+
+    def bulletExtra_jumpKollision(self, Object, Bullet):
+        if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True:
+            self.bullets.remove(Bullet)
+            self.player.max_jumps += 1
+            # tar bort extra_jump saken
+            self.Level.remove(Object)
+
+
+
+    def bulletKollision(self, Object, Bullet):
         if Object.__class__ == portal:
             self.bulletPortalKollision(Object, Bullet)
+        elif Object.extra_info ==["collectible"]:
+            self.bulletExtra_jumpKollision(Object, Bullet)
         else:
             self.bulletNormalKollision(Object, Bullet)
     
@@ -260,11 +273,11 @@ class spel:
     
 
 
-    def bulletKollision(self):
+    def bulletKollisionLoop(self):
         for Bullet in self.bullets:
             Bullet.move()
             for Object in self.Level:
-                self.bulletPortalCheck(Object, Bullet)
+                self.bulletKollision(Object, Bullet)
             Bullet.draw(screen, self.scroll[0], self.scroll[1])
             # kollar om skotten är gamla
             self.bulletÅlderCheck(Bullet)
@@ -314,7 +327,7 @@ def main() -> int:
         mittSpel.ritaSpelare()
 
         # Kollar om skotten rör vid ett objekt och flyttar de fram
-        mittSpel.bulletKollision()
+        mittSpel.bulletKollisionLoop()
         
         # Ritar vapnet
         mittSpel.gun.draw(mittSpel.scroll[0], mittSpel.scroll[1], screen)

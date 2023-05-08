@@ -21,9 +21,9 @@ class spel:
             extra_jump(100, 600),
             extra_jump(500, 300),
             extra_jump(-41, sy - 50)]
-        self.Level = [speed(-100, 650, 50, 50, (255, 0, 0))]
+        self.Level = [speed(-100, 650, 50, 50, (255, 0, 0)), speed(100, 650, 50, 50, (255, 0, 0))]
         self.tunnels = [
-            tunnel(1000, 600, 300, 50, (255, 0, 0))]
+            tunnel(1000, 650, 300, 50, (255, 0, 0))]
         self.portals = [
             portal(350, 650, 1400, 650)]
         self.gun = (Pistol(self.player.x, self.player.y, 90))
@@ -196,7 +196,7 @@ class spel:
                 else:
                     # Kollar om spelaren är inuti objektet
                     if checkCollisions(object.x, object.y, object.xsize, object.ysize, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
-                        if object.extra_info == ["collecteble"]:
+                        if object.__class__ == extra_jump or object.__class__ == speed:
                             self.collektebleCollekted(object)
                         else:
                             # Kollar vilken sida som nuddade objektet med linjer på spelaren
@@ -345,6 +345,9 @@ def main() -> int:
         # Skriver hur många hopp spelaren har kvar på skärmen
         jumps_left = mittSpel.FONT.render(("jumps: " + str(mittSpel.player.jumps) + "/" + str(mittSpel.player.max_jumps)), True, (0, 0, 0))
         screen.blit(jumps_left, (10, 10))
+        # Skriver hur snabb spelaren är på skärmen
+        jumps_left = mittSpel.FONT.render(("speed: " + str(round(mittSpel.player.speed)) + "/" + str(round(mittSpel.player.max_speed))), True, (0, 0, 0))
+        screen.blit(jumps_left, (10, 50))
         
         # uppdaterar skärmen
         pygame.display.update()

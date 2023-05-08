@@ -1,11 +1,9 @@
 import pygame
-
-
 from utils import screen
 
 class extra_jump:
     def __init__(self, x, y, extra_info=[]):
-        self.extra_info = ["collectible"]
+        self.extra_info = ["collecteble"]
         self.x = x
         self.y = y
         self.xsize = 50

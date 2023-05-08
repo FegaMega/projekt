@@ -18,6 +18,8 @@ class Player:
         self.TPallow: bool = True
         self.on_floor: bool = False
         self.max_jumps = 1
+        self.speed = 1
+        self.max_speed = 1
         self.in_tunnel = False
         self.xhitbox: bool = True
         self.yhitbox: bool = True
@@ -27,10 +29,10 @@ class Player:
         pygame.draw.rect(screen, (0, 255, 0), playe)
     def movement(self):
         if self.ml:
-            self.xspeed = -4/10
+            self.xspeed = (-4/10) * self.speed
         if self.mr:
-            self.xspeed = 4/10
-        if self.mr == False and self.ml == False:           
+            self.xspeed = (4/10) * self.speed
+        if self.mr == self.ml:
             self.xspeed = 0
         if self.mu == True:
             self.yspeed = -15/10

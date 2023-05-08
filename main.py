@@ -9,6 +9,7 @@ from tunnels import tunnel
 from portals import portal
 from pistol import Pistol
 from bullet import bullet
+from speed import speed
 
 
 # Fixar saker
@@ -20,7 +21,7 @@ class spel:
             extra_jump(100, 600),
             extra_jump(500, 300),
             extra_jump(-41, sy - 50)]
-        self.Level = []
+        self.Level = [speed(-100, 650, 50, 50, (255, 0, 0))]
         self.tunnels = [
             tunnel(1000, 600, 300, 50, (255, 0, 0))]
         self.portals = [
@@ -47,6 +48,9 @@ class spel:
             if n[len(n) - 1] == "object":
                 del (n[len(n) - 1])
             self.Level.append(objects(n[0], n[1], n[2], n[3], n[4]))
+        for object in self.Level:
+            if object.__class__ == speed:
+                self.player.max_speed += .1
 
     def checkEvent(self, event):
         # ON
@@ -116,12 +120,17 @@ class spel:
 
 
 
-    def collektebleCheck(self, n):
+    def collektebleCollekted(self, object):
         # Kollar om det är en extra_jump
         if object.__class__ == extra_jump:
             self.player.max_jumps += 1
             # tar bort extra_jump saken
-            del self.Level[n]
+            self.Level.remove(object)
+        # Kollar om det är en extra_jump
+        if object.__class__ == speed:
+            self.player.speed += .1
+            # tar bort extra_jump saken
+            self.Level.remove(object)
 
 
 
@@ -187,11 +196,8 @@ class spel:
                 else:
                     # Kollar om spelaren är inuti objektet
                     if checkCollisions(object.x, object.y, object.xsize, object.ysize, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
-                        # Kollar om det är en extra_jump
-                        if object.__class__ == extra_jump:
-                            self.player.max_jumps += 1
-                            # tar bort extra_jump saken
-                            self.Level.remove(object)
+                        if object.extra_info == ["collecteble"]:
+                            self.collektebleCollekted(object)
                         else:
                             # Kollar vilken sida som nuddade objektet med linjer på spelaren
                             self.linjeKollisiomMedObjekt(object)
@@ -247,11 +253,9 @@ class spel:
 
 
 
-    def bulletExtra_jumpKollision(self, Object, Bullet):
+    def bulletCollectebleKollision(self, Object, Bullet):
         if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True:
-            self.bullets.remove(Bullet)
-            self.player.max_jumps += 1
-            # tar bort extra_jump saken
+            self.collektebleCollekted(Object)
             self.Level.remove(Object)
 
 
@@ -259,8 +263,8 @@ class spel:
     def bulletKollision(self, Object, Bullet):
         if Object.__class__ == portal:
             self.bulletPortalKollision(Object, Bullet)
-        elif Object.extra_info ==["collectible"]:
-            self.bulletExtra_jumpKollision(Object, Bullet)
+        elif Object.__class__ == extra_jump:
+            self.bulletCollectebleKollision(Object, Bullet)
         else:
             self.bulletNormalKollision(Object, Bullet)
     

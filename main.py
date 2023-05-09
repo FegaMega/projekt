@@ -67,7 +67,7 @@ class spel:
             if event.key == K_d:
                 self.gun.change_angle = -10
             if event.key == K_SPACE:
-                self.bullets.append(bullet(self.gun.x, self.gun.y + 3, 3, self.gun.angle))
+                self.bullets.append(bullet(self.gun.x, self.gun.y + 3, 5, self.gun.angle))
         # OFF
         if event.type == pygame.KEYUP:
             if event.key == K_LEFT:
@@ -346,7 +346,7 @@ def main() -> int:
         jumps_left = mittSpel.FONT.render(("jumps: " + str(mittSpel.player.jumps) + "/" + str(mittSpel.player.max_jumps)), True, (0, 0, 0))
         screen.blit(jumps_left, (10, 10))
         # Skriver hur snabb spelaren är på skärmen
-        jumps_left = mittSpel.FONT.render(("speed: " + str(round(mittSpel.player.speed)) + "/" + str(round(mittSpel.player.max_speed))), True, (0, 0, 0))
+        jumps_left = mittSpel.FONT.render(("speed: " + str(round(mittSpel.player.speed*10)/10) + "/" + str(round(mittSpel.player.max_speed*10)/10)), True, (0, 0, 0))
         screen.blit(jumps_left, (10, 50))
         
         # uppdaterar skärmen

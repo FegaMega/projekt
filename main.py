@@ -10,6 +10,7 @@ from portals import portal
 from pistol import Pistol
 from bullet import bullet
 from speed import speed
+from Finish import finish
 
 
 # Fixar saker
@@ -21,7 +22,7 @@ class spel:
             extra_jump(100, 600),
             extra_jump(500, 300),
             extra_jump(-41, sy - 50)]
-        self.Level = [speed(-100, 650, 50, 50, (255, 0, 0)), speed(100, 650, 50, 50, (255, 0, 0))]
+        self.Level1 = [speed(-100, 650, 50, 50, (255, 0, 0)), speed(100, 650, 50, 50, (255, 0, 0)), finish(500, 650)]
         self.tunnels = [
             tunnel(1000, 650, 300, 50, (255, 0, 0))]
         self.portals = [
@@ -29,7 +30,6 @@ class spel:
         self.gun = (Pistol(self.player.x, self.player.y, 90))
         self.bullets = []
         self.scroll = [0, 0]
-        self.TPallow: bool
         self.FONT = pygame.font.SysFont("Helvetica-bold", 50)
         self.json_level = [[250.0, 650.0, 50, 50, [194, 60, 60], "object"], [650.0, 650.0, 50, 50, [0, 0, 0], "object"]]
         self.nlev = ""
@@ -38,19 +38,21 @@ class spel:
         self.coinscollected = 0
         self.ObjectsNotTouched = 0
         self.TPallow: bool = True
+        self.r = True
         for ExtraJumps in self.extra_jumps:
-            self.Level.append(extra_jump(ExtraJumps.x, ExtraJumps.y, "ExtraJumps"))
+            self.Level1.append(extra_jump(ExtraJumps.x, ExtraJumps.y, "ExtraJumps"))
         for Tunnel in self.tunnels:
-            self.Level.append(tunnel(Tunnel.x, Tunnel.y, Tunnel.xsize, Tunnel.ysize, Tunnel.color, "Tunnel"))
+            self.Level1.append(tunnel(Tunnel.x, Tunnel.y, Tunnel.xsize, Tunnel.ysize, Tunnel.color, "Tunnel"))
         for Portal in self.portals:
-            self.Level.append(portal(Portal.xB, Portal.yB, Portal.xR, Portal.yR, "Portal"))
+            self.Level1.append(portal(Portal.xB, Portal.yB, Portal.xR, Portal.yR, "Portal"))
         for n in self.json_level:
             if n[len(n) - 1] == "object":
                 del (n[len(n) - 1])
-            self.Level.append(objects(n[0], n[1], n[2], n[3], n[4]))
-        for object in self.Level:
+            self.Level1.append(objects(n[0], n[1], n[2], n[3], n[4]))
+        for object in self.Level1:
             if object.__class__ == speed:
                 self.player.max_speed += .1
+        
 
     def checkEvent(self, event):
         # ON
@@ -125,12 +127,18 @@ class spel:
         if object.__class__ == extra_jump:
             self.player.max_jumps += 1
             # tar bort extra_jump saken
-            self.Level.remove(object)
+            self.Level1.remove(object)
         # Kollar om det är en extra_jump
         if object.__class__ == speed:
             self.player.speed += .1
             # tar bort extra_jump saken
-            self.Level.remove(object)
+            self.Level1.remove(object)
+    
+
+
+    def finished(self, object):
+        if object.__class__ == finish:
+            self.r = False
 
 
 
@@ -188,7 +196,7 @@ class spel:
             # kollar om spelaren är under kamerans botten
             self.golvCheck()
             # objekt collision loopen
-            for object in self.Level:
+            for object in self.Level1:
                 # kollar om det är en portal (de är speciella)
                 if object.__class__ == portal:
                     self.portalKollision(object)
@@ -198,6 +206,8 @@ class spel:
                     if checkCollisions(object.x, object.y, object.xsize, object.ysize, self.player.x, self.player.y, self.player.xsize, self.player.ysize):
                         if object.__class__ == extra_jump or object.__class__ == speed:
                             self.collektebleCollekted(object)
+                        elif object.__class__ == finish:
+                            self.finished(object)
                         else:
                             # Kollar vilken sida som nuddade objektet med linjer på spelaren
                             self.linjeKollisiomMedObjekt(object)
@@ -256,7 +266,7 @@ class spel:
     def bulletCollectebleKollision(self, Object, Bullet):
         if checkCollisions(Object.x, Object.y, Object.xsize, Object.ysize, Bullet.x, Bullet.y, Bullet.xsize, Bullet.ysize) == True:
             self.collektebleCollekted(Object)
-            self.Level.remove(Object)
+            self.Level1.remove(Object)
 
 
 
@@ -280,7 +290,7 @@ class spel:
     def bulletKollisionLoop(self):
         for Bullet in self.bullets:
             Bullet.move()
-            for Object in self.Level:
+            for Object in self.Level1:
                 self.bulletKollision(Object, Bullet)
             Bullet.draw(screen, self.scroll[0], self.scroll[1])
             # kollar om skotten är gamla
@@ -290,7 +300,7 @@ class spel:
 
     def ritaObject(self):
         # Ritar objekten i mittSpel.Level
-        for Object in self.Level:
+        for Object in self.Level1:
             Object.draw(self.scroll[0], self.scroll[1])
 
 
@@ -299,19 +309,23 @@ class spel:
         for i in self.player.collision_lines:
             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(i[0] - self.scroll[0], i[1] - self.scroll[1], i[2], i[3]))
 
+    
+
+
+
 def main() -> int:
     pygame.init()
     mittSpel = spel()
 
     # spel loopen
-    r = True
-    while r:
+
+    while mittSpel.r == True:
         screen.fill((146, 244, 255))
         # Töm event kön
         for event in pygame.event.get():
             # Quit kod
             if event.type == QUIT:
-                r = False
+                mittSpel.r = False
             # inputs
             mittSpel.checkEvent(event)
 

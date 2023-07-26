@@ -11,6 +11,7 @@ from pistol import Pistol
 from bullet import bullet
 from speed import speed
 from Finish import finish
+from music import music
 
 
 # Fixar saker
@@ -18,6 +19,8 @@ from Finish import finish
 class spel:
     def __init__(self):
         self.player = Player()
+        self.music_lib = ["Cipher_BGM.flac", "Aloft_BGM.flac", "lemmino-nocturnal.flac"]
+        self.M = music(self.music_lib)
         self.extra_jumps = [
             extra_jump(100, 600),
             extra_jump(500, 300),
@@ -362,6 +365,9 @@ def main() -> int:
         # Skriver hur snabb spelaren är på skärmen
         jumps_left = mittSpel.FONT.render(("speed: " + str(round(mittSpel.player.speed*10)/10) + "/" + str(round(mittSpel.player.max_speed*10)/10)), True, (0, 0, 0))
         screen.blit(jumps_left, (10, 50))
+
+        #Spelar musik
+        mittSpel.M.RunMusic
         
         # uppdaterar skärmen
         pygame.display.update()

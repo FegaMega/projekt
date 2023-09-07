@@ -2,7 +2,7 @@ import pygame
 from utils import screen
 
 class speed:
-    def __init__(self, x, y, xsize, ysize, color, extra_info=[]):
+    def __init__(self, x, y, xsize, ysize, color):
         self.extra_info = "collecteble"
         self.x = x
         self.y = y

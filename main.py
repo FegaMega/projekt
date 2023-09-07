@@ -25,7 +25,7 @@ class spel:
             extra_jump(100, 600),
             extra_jump(500, 300),
             extra_jump(-41, sy - 50)]
-        self.Level1 = [speed(-100, 650, 50, 50, (255, 0, 0)), speed(100, 650, 50, 50, (255, 0, 0)), finish(500, 650)]
+        self.Level1 = [speed(-100, 650, 50, 50, (255, 0, 0)), speed(100, 650, 50, 50, (255, 0, 0))]
         self.tunnels = [
             tunnel(1000, 650, 300, 50, (255, 0, 0))]
         self.portals = [
